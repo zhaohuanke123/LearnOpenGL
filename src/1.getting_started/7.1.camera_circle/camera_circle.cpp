@@ -11,16 +11,16 @@
 
 #include <iostream>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
 void processInput(GLFWwindow *window);
 
-// settings
+// 设置
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-int main()
-{
-    // glfw: initialize and configure
+int main() {
+    // glfw：初始化并配置
     // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -31,91 +31,89 @@ int main()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    // glfw window creation
+    // glfw：创建窗口
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    if (window == NULL) {
+        std::cout << "创建 GLFW 窗口失败" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // glad: load all OpenGL function pointers
+    // glad：加载所有 OpenGL 函数指针
     // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        std::cout << "初始化 GLAD 失败" << std::endl;
         return -1;
     }
 
-    // configure global opengl state
+    // 配置全局 OpenGL 状态
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // build and compile our shader zprogram
+    // 构建并编译我们的着色器程序
     // ------------------------------------
     Shader ourShader("7.1.camera.vs", "7.1.camera.fs");
 
-    // set up vertex data (and buffer(s)) and configure vertex attributes
+    // 设置顶点数据（以及缓冲区）和配置顶点属性
     // ------------------------------------------------------------------
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
     };
-    // world space positions of our cubes
+    // 我们立方体的世界空间位置
     glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(2.0f, 5.0f, -15.0f),
         glm::vec3(-1.5f, -2.2f, -2.5f),
         glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3 (2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3( 1.3f, -2.0f, -2.5f),
-        glm::vec3( 1.5f,  2.0f, -2.5f),
-        glm::vec3( 1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f, 3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f, 2.0f, -2.5f),
+        glm::vec3(1.5f, 0.2f, -1.5f),
+        glm::vec3(-1.3f, 1.0f, -1.5f)
     };
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -126,112 +124,106 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    // 顶点位置属性
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    // 纹理坐标属性
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-
-    // load and create a texture 
+    // 加载并创建纹理
     // -------------------------
     unsigned int texture1, texture2;
-    // texture 1
+    // 纹理 1
     // ---------
     glGenTextures(1, &texture1);
     glBindTexture(GL_TEXTURE_2D, texture1);
-    // set the texture wrapping parameters
+    // 设置纹理环绕参数
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
+    // 设置纹理过滤参数
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
+    // 加载图像，创建纹理并生成 mipmaps
     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/container.jpg").c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
+    stbi_set_flip_vertically_on_load(true); // 告诉 stb_image.h 在加载纹理时将图像在 y 轴上翻转
+    unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/container.jpg").c_str(), &width, &height,
+                                    &nrChannels, 0);
+    if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
+    } else {
+        std::cout << "加载纹理失败" << std::endl;
     }
     stbi_image_free(data);
-    // texture 2
+    // 纹理 2
     // ---------
     glGenTextures(1, &texture2);
     glBindTexture(GL_TEXTURE_2D, texture2);
-    // set the texture wrapping parameters
+    // 设置纹理环绕参数
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
+    // 设置纹理过滤参数
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    data = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
+    // 加载图像，创建纹理并生成 mipmaps
+    data = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &width, &height, &nrChannels,
+                     0);
+    if (data) {
+        // 注意：awesomeface.png 含有透明通道，因此需告知 OpenGL 数据格式为 GL_RGBA
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
+    } else {
+        std::cout << "加载纹理失败" << std::endl;
     }
     stbi_image_free(data);
 
-    // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+    // 告诉 OpenGL 每个采样器对应的纹理单元（只需设置一次）
     // -------------------------------------------------------------------------------------------
     ourShader.use();
     ourShader.setInt("texture1", 0);
     ourShader.setInt("texture2", 1);
 
-    // pass projection matrix to shader (as projection matrix rarely changes there's no need to do this per frame)
+    // 将投影矩阵传递给着色器（由于投影矩阵很少变化，无需每帧都传递）
     // -----------------------------------------------------------------------------------------------------------
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    ourShader.setMat4("projection", projection); 
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
+    ourShader.setMat4("projection", projection);
 
-
-    // render loop
+    // 渲染循环
     // -----------
-    while (!glfwWindowShouldClose(window))
-    {
-        // input
+    while (!glfwWindowShouldClose(window)) {
+        // 输入处理
         // -----
         processInput(window);
 
-        // render
+        // 渲染指令
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // bind textures on corresponding texture units
+        // 在对应的纹理单元上绑定纹理
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
 
-        // activate shader
+        // 激活着色器程序
         ourShader.use();
 
-        // camera/view transformation
-        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        // 摄像机/视图变换
+        glm::mat4 view = glm::mat4(1.0f); // 确保首先将矩阵初始化为单位矩阵
         float radius = 10.0f;
         float camX = static_cast<float>(sin(glfwGetTime()) * radius);
         float camZ = static_cast<float>(cos(glfwGetTime()) * radius);
-        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), // 摄像机位置
+                           glm::vec3(0.0f, 0.0f, 0.0f), // 目标位置
+                           glm::vec3(0.0f, 1.0f, 0.0f)); // 上向量
         ourShader.setMat4("view", view);
 
-        // render boxes
+        // 渲染多个立方体
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < 10; i++)
-        {
-            // calculate the model matrix for each object and pass it to shader before drawing
+        for (unsigned int i = 0; i < 10; i++) {
+            // 计算每个物体的模型矩阵，并在绘制前传入着色器
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
@@ -241,36 +233,33 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // glfw：交换缓冲区并轮询 IO 事件（键盘按下/释放、鼠标移动等）
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    // optional: de-allocate all resources once they've outlived their purpose:
+    // 可选：在资源不再使用后释放所有资源
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // glfw：终止，释放之前分配的所有 GLFW 资源
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// 处理所有输入：查询 GLFW 是否有相关键被按下/释放，并做出相应处理
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
-{
+void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// glfw：当窗口尺寸发生变化（由操作系统或用户调整）时，回调该函数
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    // 确保视口与新的窗口尺寸相匹配；请注意，在 Retina 显示器上宽度和高度可能远大于预设值
     glViewport(0, 0, width, height);
 }
