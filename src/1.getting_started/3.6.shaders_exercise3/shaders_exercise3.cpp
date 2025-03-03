@@ -9,7 +9,7 @@ out vec3 ourPosition;
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0); 
+    gl_Position = vec4(aPos, 1.0);
     // ourColor = aColor;
     ourPosition = aPos;
 }
@@ -25,13 +25,10 @@ void main()
 {
     FragColor = vec4(ourPosition, 1.0);    // note how the position value is linearly interpolated to get all the different colors
 }
-
-/* 
-Answer to the question: Do you know why the bottom-left side is black?
+/*
+回答问题：你知道为什么左下角是黑色的吗？
 -- --------------------------------------------------------------------
-Think about this for a second: the output of our fragment's color is equal to the (interpolated) coordinate of 
-the triangle. What is the coordinate of the bottom-left point of our triangle? This is (-0.5f, -0.5f, 0.0f). Since the
-xy values are negative they are clamped to a value of 0.0f. This happens all the way to the center sides of the 
-triangle since from that point on the values will be interpolated positively again. Values of 0.0f are of course black
-and that explains the black side of the triangle.
+想一想：我们的片段着色器输出的颜色等于三角形的（经过插值的）坐标。
+那么，三角形左下角的坐标是多少呢？是 (-0.5f, -0.5f, 0.0f)。由于 xy 的值为负，它们被限制为 0.0f。
+从这一点开始，一直到三角形中心，值都会重新通过插值变为正数。而值为 0.0f 自然对应黑色，这就解释了三角形黑色的一侧。
 */
