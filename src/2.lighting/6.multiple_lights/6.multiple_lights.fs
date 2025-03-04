@@ -159,7 +159,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
         vec2 projTexCoords = (texcoord / 0.5) + 0.5;
 
         // 计算到中心的距离，用于限制投影在圆形区域内
-        float radius = 1.0;// 调整半径大小
+        float radius = 2.0;// 调整半径大小
         float dist = length(texcoord);
 
         // 只在圆形区域内应用投影纹理
