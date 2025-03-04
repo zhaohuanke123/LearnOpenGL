@@ -58,16 +58,14 @@ void main()
    FragColor = vec4(LightingColor * objectColor, 1.0);
 }
 
-
 /*
-So what do we see?
-You can see (for yourself or in the provided image) the clear distinction of the two triangles at the front of the 
-cube. This 'stripe' is visible because of fragment interpolation. From the example image we can see that the top-right 
-vertex of the cube's front face is lit with specular highlights. Since the top-right vertex of the bottom-right triangle is 
-lit and the other 2 vertices of the triangle are not, the bright values interpolates to the other 2 vertices. The same 
-happens for the upper-left triangle. Since the intermediate fragment colors are not directly from the light source 
-but are the result of interpolation, the lighting is incorrect at the intermediate fragments and the top-left and 
-bottom-right triangle collide in their brightness resulting in a visible stripe between both triangles.
+那么我们看到了什么呢？
+你可以亲自观察（或者参考提供的图像）到立方体前面两个三角形之间明显的区别。
+这个“条纹”之所以可见，是由于片元插值的缘故。
+从示例图像中我们可以看到，立方体前面板的右上顶点有镜面高光。
+由于底部右侧三角形的右上顶点被照亮，而该三角形另外两个顶点未被照亮，所以明亮的数值通过插值传递到了另外两个顶点。
+上部左侧三角形也发生了同样的情况。由于中间的片元颜色并非直接来自光源，而是插值的结果，所以中间片元的光照计算不正确，
+导致上部左侧三角形与底部右侧三角形在亮度上发生冲突，从而在两个三角形之间出现了一条明显的条纹。
 
-This effect will become more apparent when using more complicated shapes.
+当使用更复杂的形状时，这种效果会更加明显。
 */
