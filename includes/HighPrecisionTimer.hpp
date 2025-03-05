@@ -13,13 +13,12 @@ private:
     bool m_stopped;
 
     // 回调函数，用于自定义输出方式
-    std::function<void(const std::string &, long long)> m_callback;
+    // std::function<void(const std::string &, long long)> m_callback;
 
 public:
     // 构造函数，开始计时
-    explicit HighPrecisionTimer(const std::string &name = "Timer",
-                                std::function<void(const std::string &, long long)> callback = nullptr)
-        : m_timerName(name), m_stopped(false), m_callback(callback) {
+    explicit HighPrecisionTimer(const std::string &name = "Timer")
+        : m_timerName(name), m_stopped(false) {
         m_startTimePoint = std::chrono::high_resolution_clock::now();
     }
 
@@ -40,16 +39,19 @@ public:
         m_stopped = true;
 
         // 如果有回调函数，调用回调函数
-        if (m_callback) {
-            m_callback(m_timerName, duration);
-        } else {
-            // 默认输出不同时间单位的结果
-            std::cout << m_timerName << " 执行时间: " << std::endl;
-            std::cout << "  " << duration << " 纳秒" << std::endl;
-            // std::cout << "  " << duration / 1000.0 << " 微秒" << std::endl;
-            // std::cout << "  " << duration / 1000000.0 << " 毫秒" << std::endl;
-            // std::cout << "  " << duration / 1000000000.0 << " 秒" << std::endl;
-        }
+        // if (m_callback) {
+        //     m_callback(m_timerName, duration);
+        // } else {
+        // 默认输出不同时间单位的结果
+        // std::cout << m_timerName << " 执行时间: " << std::endl;
+        // std::cout << "  " << duration << " 纳秒" << std::endl;
+
+        // 改成printf
+        printf("%s 执行时间： %f 微秒\n", m_timerName.c_str(), duration / 1000.0);
+        // std::cout << "  " << duration / 1000.0 << " 微秒" << std::endl;
+        // std::cout << "  " << duration / 1000000.0 << " 毫秒" << std::endl;
+        // std::cout << "  " << duration / 1000000000.0 << " 秒" << std::endl;
+        // }
     }
 
     // 重置计时器
