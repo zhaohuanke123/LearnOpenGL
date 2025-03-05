@@ -8,8 +8,13 @@ uniform vec3 cameraPos;
 uniform samplerCube skybox;
 
 void main()
-{    
+{
+    // 反射
+    //    vec3 I = normalize(Position - cameraPos);
+    //    vec3 R = reflect(I, normalize(Normal));
+    // 折射
+    float ratio = 1.00 /    2.42;
     vec3 I = normalize(Position - cameraPos);
-    vec3 R = reflect(I, normalize(Normal));
+    vec3 R = refract(I, normalize(Normal), ratio);
     FragColor = vec4(texture(skybox, R).rgb, 1.0);
 }
