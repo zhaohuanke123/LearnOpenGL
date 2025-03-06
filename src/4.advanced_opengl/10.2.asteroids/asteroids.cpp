@@ -13,9 +13,12 @@
 
 #include <iostream>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+
 void processInput(GLFWwindow *window);
 
 // settings
@@ -24,8 +27,8 @@ const unsigned int SCR_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 55.0f));
-float lastX = (float)SCR_WIDTH / 2.0;
-float lastY = (float)SCR_HEIGHT / 2.0;
+float lastX = (float) SCR_WIDTH / 2.0;
+float lastY = (float) SCR_HEIGHT / 2.0;
 bool firstMouse = true;
 
 // timing
@@ -47,7 +50,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -64,7 +67,7 @@ int main()
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
@@ -85,9 +88,8 @@ int main()
 
     // generate a large list of semi-random model transformation matrices
     // ------------------------------------------------------------------
-    unsigned int amount = 1000;
-    glm::mat4* modelMatrices;
-    modelMatrices = new glm::mat4[amount];
+    unsigned int amount = 10000; // 再加 0 就卡了
+    auto *modelMatrices = new glm::mat4[amount];
     srand(static_cast<unsigned int>(glfwGetTime())); // initialize random seed
     float radius = 50.0;
     float offset = 2.5f;
@@ -95,12 +97,12 @@ int main()
     {
         glm::mat4 model = glm::mat4(1.0f);
         // 1. translation: displace along circle with 'radius' in range [-offset, offset]
-        float angle = (float)i / (float)amount * 360.0f;
-        float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float angle = static_cast<float>(i) / static_cast<float>(amount) * 360.0f;
+        float displacement = rand() % static_cast<int>(2 * offset * 100) / 100.0f - offset;
         float x = sin(angle) * radius + displacement;
-        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        displacement = rand() % static_cast<int>(2 * offset * 100) / 100.0f - offset;
         float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        displacement = rand() % static_cast<int>(2 * offset * 100) / 100.0f - offset;
         float z = cos(angle) * radius + displacement;
         model = glm::translate(model, glm::vec3(x, y, z));
 
@@ -136,7 +138,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // configure transformation matrices
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f,
+                                                1000.0f);
         glm::mat4 view = camera.GetViewMatrix();;
         shader.use();
         shader.setMat4("projection", projection);
@@ -154,7 +157,7 @@ int main()
         {
             shader.setMat4("model", modelMatrices[i]);
             rock.Draw(shader);
-        }     
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -163,6 +166,8 @@ int main()
     }
 
     glfwTerminate();
+
+    delete [] modelMatrices;
     return 0;
 }
 
@@ -185,7 +190,7 @@ void processInput(GLFWwindow *window)
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
@@ -194,7 +199,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 {
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
@@ -217,7 +222,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }

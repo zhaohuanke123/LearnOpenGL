@@ -62,8 +62,8 @@ int main()
         for (int x = -10; x < 10; x += 2)
         {
             glm::vec2 translation;
-            translation.x = (float)x / 10.0f + offset;
-            translation.y = (float)y / 10.0f + offset;
+            translation.x = static_cast<float>(x) / 10.0f + offset;
+            translation.y = static_cast<float>(y) / 10.0f + offset;
             translations[index++] = translation;
         }
     }
