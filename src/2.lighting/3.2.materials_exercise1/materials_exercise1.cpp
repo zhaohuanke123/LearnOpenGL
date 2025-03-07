@@ -62,7 +62,7 @@ int main() {
     glfwSetScrollCallback(window, scroll_callback);
 
     // 告诉GLFW捕获我们的鼠标
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     // glad: 加载所有OpenGL函数指针
     // ---------------------------------------
