@@ -10,6 +10,7 @@
 #include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
+#include <learnopengl/IMGUIContext.h>
 
 #include <iostream>
 
@@ -67,7 +68,7 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -140,6 +141,7 @@ int main()
         glm::vec3(1.00)
     };
 
+    IMGUIContext imguiContext(window);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -154,7 +156,22 @@ int main()
         // -----
         processInput(window);
 
-        // render
+        imguiContext.newFrame();
+        // imgui 四个，修改4个光照
+        ImGui::Begin("Light ");
+        for (int i = 0; i < 4; i++)
+        {
+            std::string lightLabel = "Light " + std::to_string(i+1);
+            if (ImGui::TreeNode(lightLabel.c_str()))
+            {
+                std::string colorLabel = "Color##" + std::to_string(i);
+                std::string posLabel = "Position##" + std::to_string(i);
+                ImGui::ColorEdit3(colorLabel.c_str(), (float*)&lightColors[i]);
+                ImGui::SliderFloat3(posLabel.c_str(), (float*)&lightPositions[i], -10.0f, 10.0f);
+                ImGui::TreePop();
+            }
+        }
+        ImGui::End();
         // ------
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -179,6 +196,7 @@ int main()
 
         std::cout << (gammaEnabled ? "Gamma enabled" : "Gamma disabled") << std::endl;
 
+        imguiContext.render();
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -249,7 +267,7 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    // camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
