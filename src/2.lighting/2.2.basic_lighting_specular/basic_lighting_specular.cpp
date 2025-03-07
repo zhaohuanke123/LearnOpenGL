@@ -264,7 +264,10 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+       if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    {
+        camera.ProcessMouseMovement(xoffset, yoffset);
+    }
 }
 
 // glfw：每当鼠标滚轮滚动时，调用此回调函数

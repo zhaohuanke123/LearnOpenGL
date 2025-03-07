@@ -220,7 +220,10 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     float yoffset = lastY - ypos;
     lastX = xpos;
     lastY = ypos;
-    camera.ProcessMouseMovement(xoffset, yoffset);
+       if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    {
+        camera.ProcessMouseMovement(xoffset, yoffset);
+    }
 }
 
 // 回调函数：鼠标滚轮滚动
