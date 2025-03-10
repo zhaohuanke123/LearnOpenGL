@@ -12,6 +12,7 @@
 #include <learnopengl/model.h>
 
 #include <iostream>
+#include <learnopengl/IMGUIContext.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -101,6 +102,9 @@ int main()
     // -------------
     glm::vec3 lightPos(0.5f, 1.0f, 0.3f);
 
+    IMGUIContext _context(window);
+
+    bool isUseSub = false;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -114,6 +118,15 @@ int main()
         // input
         // -----
         processInput(window);
+
+        _context.newFrame();
+
+        ImGui::Begin("Settings");
+        ImGui::Checkbox("Use Sub", &isUseSub);
+        ImGui::SliderFloat("Height Scale", &heightScale, 0.0f, 1.0f);
+        ImGui::End();
+
+        shader.setBool("IsSub", isUseSub);
 
         // render
         // ------
@@ -152,6 +165,7 @@ int main()
         shader.setMat4("model", model);
         renderQuad();
 
+        _context.render();
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
